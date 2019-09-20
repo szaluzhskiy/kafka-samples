@@ -1,0 +1,24 @@
+spring:
+  ## Kafka
+  kafka:
+    bootstrap-servers: 127.0.0.1:9092
+    consumer:
+      auto-offset-reset: latest
+      enable-auto-commit: true
+      group-id: consumer-group-1
+      key-deserializer: com.stas.learning.messaging.kafka.serializers.DataKeyDeserializer
+      value-deserializer: com.stas.learning.messaging.kafka.serializers.DataJsonDeserializer
+      #properties.spring.json.key.default.type: java.lang.String
+      #properties.spring.deserializer.key.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
+      #properties.spring.deserializer.value.delegate.class: com.epam.edp.insurance.contract.impl.kafka.JacksonZoneDateTimeDeserializer
+      properties.spring.json.trusted.packages: '*'
+    producer:
+      key-serializer: com.stas.learning.messaging.kafka.serializers.DataKeySerializer
+      value-serializer: com.stas.learning.messaging.kafka.serializers.DataJsonSerializer
+      properties.spring.json.trusted.packages: '*'
+app:
+  kafka:
+    input:
+      topic: input.topic.1
+    output:
+      topic: output.topic.1
