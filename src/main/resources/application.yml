@@ -1,7 +1,10 @@
+server:
+  port: 8080
+
 spring:
   ## Kafka
   kafka:
-    bootstrap-servers: 127.0.0.1:9092
+    bootstrap-servers: 127.0.0.1:9093
     consumer:
       auto-offset-reset: latest
       enable-auto-commit: true
@@ -22,3 +25,9 @@ app:
       topic: input.topic.1
     output:
       topic: output.topic.1
+    data:
+      topic: transport.topic
+    onereq:
+      topic: topic.1.req
+    oneres:
+      topic: topic.1.res

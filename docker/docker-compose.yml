@@ -1,4 +1,6 @@
 version: '3'
+networks:
+  default:
 services:
   zookeeper:
     image: wurstmeister/zookeeper
@@ -6,17 +8,16 @@ services:
       - "2181:2181"
     hostname: zookeeper
   kafka:
-    image: wurstmeister/kafka
-    command: [start-kafka.sh]
+    image: wurstmeister/kafka:2.12-2.1.1
+    container_name: kafka
+    hostname: kafka
     ports:
-      - "9092:9092"
-    hostname: 127.0.0.1
+      - "9093:9093"
+    links:
+      - zookeeper
     environment:
-      KAFKA_CREATE_TOPICS: "UploadFile:1:1,GetFile:1:1,TrackUpload:1:1,GetEmailContent:1:1," # topic:partition:replicas
-      KAFKA_ADVERTISED_HOST_NAME: kafka # docker-machine ip
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_PORT: 9092
-    #volumes:
-    #  - /var/run/docker.sock:/var/run/docker.sock
-    depends_on:
-      - "zookeeper"
+      KAFKA_LISTENERS: PLAINTEXT://:9092,DEV://:9093
+      #creating listeners for internal access from docker and for development on localhost
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,DEV://localhost:9093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,DEV:PLAINTEXT
