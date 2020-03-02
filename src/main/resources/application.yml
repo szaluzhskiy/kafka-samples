@@ -8,7 +8,7 @@ spring:
     consumer:
       auto-offset-reset: latest
       enable-auto-commit: true
-      group-id: consumer-group-1
+      group-id: localConsumer, remoteConsumer
       key-deserializer: com.stas.learning.messaging.kafka.serializers.DataKeyDeserializer
       value-deserializer: com.stas.learning.messaging.kafka.serializers.DataJsonDeserializer
       #properties.spring.json.key.default.type: java.lang.String

@@ -20,8 +20,8 @@ import java.util.UUID;
 @Slf4j
 public class KafkaLocalConsumer {
 
-  @KafkaListener(topics = "${app.kafka.oneres.topic}")
+  @KafkaListener(topics = "${app.kafka.oneres.topic}", groupId = "localConsumer")
   public void listen(@Payload String data, @Header(KafkaHeaders.CORRELATION_ID) String correlationId) {
-    log.info("Remote server send responce data = {}, correlationID = {}", data, correlationId);
+    log.info("Local->consume. data = {}, correlationID = {}", data, correlationId);
   }
 }

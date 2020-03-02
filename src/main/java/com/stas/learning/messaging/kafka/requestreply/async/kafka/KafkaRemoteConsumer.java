@@ -21,12 +21,12 @@ import java.util.UUID;
 @Slf4j
 public class KafkaRemoteConsumer {
 
-  @KafkaListener(topics = "${app.kafka.onereq.topic}")
+  @KafkaListener(topics = "${app.kafka.onereq.topic}", groupId = "remoteConsumer")
   @SendTo
   public String start(@Payload String data,
                       @Header("X-Custom-Header") String customHeader,
                       @Header(KafkaHeaders.CORRELATION_ID) String correlationId) {
-    log.info("data={}, custom header={}, correlationID = {}", data, customHeader, correlationId);
+    log.info("Remote->consume. recieved data={}, custom header={}, correlationID = {}", data, customHeader, correlationId);
     return "OK";
   }
 }

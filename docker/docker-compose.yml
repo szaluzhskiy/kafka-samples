@@ -21,3 +21,8 @@ services:
       #creating listeners for internal access from docker and for development on localhost
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,DEV://localhost:9093
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,DEV:PLAINTEXT
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /tmp/docker/kafka/logs:/logs
+      - /tmp/docker/kafka/data:/data
+      - /tmp/docker/kafka/kafka-logs:/kafka

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class ConsumeService {
 
-  @KafkaListener(topics = "${app.kafka.data.topic}")
+  @KafkaListener(topics = "${app.kafka.data.topic}", groupId = "consumer-service-1")
   public void consume(DataParent parent) {
     System.out.println(parent.parentValue);
   }

@@ -30,16 +30,19 @@ public class KafkaProducer {
   @SneakyThrows
   public void start() {
     while (true) {
+      String correlationId =
+          UUID.randomUUID().toString();
       Message<String> message = MessageBuilder
           .withPayload("")
           .setHeader(KafkaHeaders.TOPIC, requestTopic.getBytes())
           .setHeader(KafkaHeaders.REPLY_TOPIC, responseTopic.getBytes())
           .setHeader(KafkaHeaders.PARTITION_ID, 0)
-          .setHeader(KafkaHeaders.CORRELATION_ID, UUID.randomUUID().toString().getBytes())
+          .setHeader(KafkaHeaders.CORRELATION_ID, correlationId.getBytes())
           .setHeader("X-Custom-Header", "Sending Custom Header with Spring Kafka")
           .build();
 
-      log.info("sending message to request topic ='{}' response to topic='{}'", requestTopic, responseTopic);
+      log.info("Local->produce. topic ='{}' response to topic='{}' correlationID = {}",
+          requestTopic, responseTopic, correlationId);
       kafkaTemplate.send(message);
 
       Thread.sleep(5000);
