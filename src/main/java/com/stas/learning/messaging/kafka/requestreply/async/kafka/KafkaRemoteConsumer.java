@@ -24,8 +24,9 @@ public class KafkaRemoteConsumer {
   @KafkaListener(topics = "${app.kafka.onereq.topic}")
   @SendTo
   public String start(@Payload String data,
-                      @Header("X-Custom-Header") String customHeader) {
-    log.info("data={}, custom header={}", data, customHeader);
+                      @Header("X-Custom-Header") String customHeader,
+                      @Header(KafkaHeaders.CORRELATION_ID) String correlationId) {
+    log.info("data={}, custom header={}, correlationID = {}", data, customHeader, correlationId);
     return "OK";
   }
 }
