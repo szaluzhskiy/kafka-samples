@@ -1,0 +1,30 @@
+server:
+  port: 8081
+
+spring:
+  ## Kafka
+  kafka:
+    bootstrap-servers: localhost:9093
+    consumer:
+      auto-offset-reset: latest
+      enable-auto-commit: true
+      group-id: localConsumer, remoteConsumer
+#      key-deserializer: com.test.kafka.transaction.serializers.TxDataKeyDeserializer
+#      value-deserializer: com.test.kafka.transaction.serializers.TxDataJsonDeserializer
+      key-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer2
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer2
+      properties.spring.json.key.default.type: java.lang.String
+      properties.spring.deserializer.key.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
+      properties.spring.deserializer.value.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
+      properties.spring.json.trusted.packages: '*'
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+#      key-serializer: com.test.kafka.transaction.serializers.TxDataKeySerializer
+#      value-serializer: com.test.kafka.transaction.serializers.TxDataJsonSerializer
+      properties.spring.json.trusted.packages: '*'
+app:
+  kafka:
+    tx:
+      data:
+        topic: transport.tx.topic
