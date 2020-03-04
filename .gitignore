@@ -1,3 +1,5 @@
+target/
+
 TS ###
 .apt_generated
 .classpath
