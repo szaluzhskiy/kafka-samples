@@ -27,4 +27,4 @@ app:
   kafka:
     tx:
       data:
-        topic: transport.tx.topic
+        topic: data.tx.topic

@@ -11,6 +11,8 @@
   <modules>
     <module>kafka-transactions</module>
     <module>kafka-service</module>
+    <module>lb-tx-producer</module>
+    <module>ms-tx-consumer</module>
   </modules>
 
   <parent>
@@ -21,7 +23,6 @@
 
   <properties>
 
-    <spring-integration-mongodb.version>5.1.3.RELEASE</spring-integration-mongodb.version>
   </properties>
 
   <dependencyManagement>

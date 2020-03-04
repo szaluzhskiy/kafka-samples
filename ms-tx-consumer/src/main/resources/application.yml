@@ -1,0 +1,24 @@
+server:
+  port: 8081
+
+spring:
+  application.name: ms-tx-consumer
+  ## Kafka
+  kafka:
+    bootstrap-servers: localhost:9093
+    consumer:
+      auto-offset-reset: latest
+      enable-auto-commit: true
+      group-id: tx-consumer-id
+      key-deserializer: com.stas.learning.messaging.transaction.serializers.TxDataKeyDeserializer
+      value-deserializer: com.stas.learning.messaging.transaction.serializers.TxDataJsonDeserializer
+      properties:
+        spring.json.trusted.packages: '*'
+        isolation.level: read_committed
+    producer:
+      key-serializer: com.stas.learning.messaging.transaction.serializers.TxDataKeySerializer
+      value-serializer: com.stas.learning.messaging.transaction.serializers.TxDataJsonSerializer
+
+app:
+  kafka:
+    tx.data.topic: data.tx.topic
