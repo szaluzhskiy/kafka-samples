@@ -1,37 +1,35 @@
 package com.test.kafka.transaction.controller;
 
 
-import com.test.kafka.transaction.domain.TxDataChild;
-import com.test.kafka.transaction.domain.TxDataKey;
-import com.test.kafka.transaction.service.TxProducerService;
+import com.test.kafka.transaction.service.CustomProducerService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController("tx")
+@RestController
+@RequestMapping("tx")
 @RequiredArgsConstructor
 public class TestController {
 
-  private final TxProducerService transactionProducerService;
+  private final CustomProducerService customProducerService;
+  @Value("${app.kafka.topic}")
+  private String appTopic;
 
-  @PostMapping
-  public void sendMessages() {
-    TxDataKey txDataKey = new TxDataKey("1", "first name");
-    TxDataChild txDataChild = new TxDataChild("parent value 1", "child value 1");
-    transactionProducerService.sendInTransaction(txDataKey, txDataChild);
+  @PostMapping("")
+  public void send() {
+    customProducerService.sendInTransaction(
+        appTopic,
+        "Some message " + Math.round(Math.random() * 1000),
+        false);
   }
 
-  @PostMapping("/annotation")
-  public void sendMessagesWithTransactionalAnnotation() {
-    TxDataKey txDataKey = new TxDataKey("2", "annotation name");
-    TxDataChild txDataChild = new TxDataChild("parent value annotation", "child value annotation");
-    transactionProducerService.sendWithAnnotation(txDataKey, txDataChild);
-  }
-
-  @PostMapping("/error")
-  public void sendErrorMessage() {
-    TxDataKey txDataKeyError = new TxDataKey("error", "error name");
-    TxDataChild txDataChildError = new TxDataChild("parent value error", "child value error");
-    transactionProducerService.sendInTransactionWithError(txDataKeyError, txDataChildError);
+  @PostMapping("error")
+  public void sendWithError() {
+    customProducerService.sendInTransaction(
+        appTopic,
+        "Some message with error " + Math.round(Math.random() * 1000),
+        true);
   }
 }

@@ -13,8 +13,22 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.springframework.data</groupId>
-      <artifactId>spring-data-jpa</artifactId>
+      <groupId>com.stas.learning.messaging</groupId>
+      <artifactId>lb-tx-producer</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <!-- Postgresql -->
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
+    <!-- JPA -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-jpa</artifactId>
     </dependency>
   </dependencies>
 
