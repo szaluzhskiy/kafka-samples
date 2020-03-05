@@ -2,6 +2,7 @@ server:
   port: 8080
 
 spring:
+  application.name: ms-kafka-service
   ## Kafka
   kafka:
     bootstrap-servers: 127.0.0.1:9093
@@ -31,3 +32,8 @@ app:
       topic: topic.1.req
     oneres:
       topic: topic.1.res
+    tx.data.topic: data.tx.topic
+
+logging.level:
+  ROOT: INFO
+  com.stas: DEBUG

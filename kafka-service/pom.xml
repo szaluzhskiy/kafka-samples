@@ -11,12 +11,11 @@
 
   <artifactId>kafka-service</artifactId>
 
-  <!--  TODO: uncomment after change configuration -->
-  <!--  <dependencies>-->
-  <!--    <dependency>-->
-  <!--      <groupId>com.stas.learning.messaging</groupId>-->
-  <!--      <artifactId>kafka-transactions</artifactId>-->
-  <!--      <version>${project.version}</version>-->
-  <!--    </dependency>-->
-  <!--  </dependencies>-->
+  <dependencies>
+    <dependency>
+      <groupId>com.stas.learning.messaging</groupId>
+      <artifactId>lb-tx-producer</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+  </dependencies>
 </project>

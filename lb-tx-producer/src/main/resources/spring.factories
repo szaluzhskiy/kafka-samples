@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.stas.learning.messaging.transaction.config.CustomKafkaAutoConfiguration

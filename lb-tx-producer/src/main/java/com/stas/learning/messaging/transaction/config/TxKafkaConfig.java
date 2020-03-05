@@ -9,6 +9,7 @@ import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.context.annotation.Bean;
@@ -27,10 +28,12 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @EnableKafka
 @EnableTransactionManagement
-@ComponentScan(basePackages = {"com.stas.learning.kafka.transaction"})
+@ComponentScan(basePackages = {"com.stas.learning.messaging.transaction"})
 public class TxKafkaConfig {
 
   public static final String NOT_DISABLE_TRANSACTION_PROFILE = "!disableKafkaTransaction";
+  public static final String TRANSACTIONAL_KAFKA_TEMPLATE_BEAN_NAME = "transactionKafkaTemplate";
+  public static final String TRANSACTIONAL_PRODUCER_FACTORY_BEAN_NAME = "transactionProducerFactory";
 
   @Autowired
   private KafkaProperties kafkaProperties; // default configuration from application.yml
@@ -52,7 +55,8 @@ public class TxKafkaConfig {
   }
 
   @Bean
-  public ProducerFactory<TxDataKey, TxDataChild> producerFactory() {
+  @Qualifier(TRANSACTIONAL_PRODUCER_FACTORY_BEAN_NAME)
+  public ProducerFactory<TxDataKey, TxDataChild> transactionProducerFactory() {
     DefaultKafkaProducerFactory<TxDataKey, TxDataChild> factory =
         new DefaultKafkaProducerFactory<>(transactionProducerConfig());
     factory.setTransactionIdPrefix(applicationName + "-tx-id-");
@@ -66,6 +70,7 @@ public class TxKafkaConfig {
   }
 
   @Bean
+  @Qualifier(TRANSACTIONAL_KAFKA_TEMPLATE_BEAN_NAME)
   public KafkaTemplate<TxDataKey, TxDataChild> transactionKafkaTemplate(
       ProducerFactory<TxDataKey, TxDataChild> producerFactory) {
     return new KafkaTemplate<>(producerFactory);
