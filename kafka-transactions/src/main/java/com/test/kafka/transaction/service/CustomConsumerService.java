@@ -30,7 +30,6 @@ public class CustomConsumerService {
     final Message message = messageTxService
         .create(messageHeaders.get(KafkaHeaders.RECEIVED_MESSAGE_KEY, String.class), value);
     return message.toString();
-//    throw new IllegalStateException("Custom error to check transaction: " + value);
   }
 
   @KafkaListener(topics = "${app.kafka.send.to.topic}", containerFactory = "transactionKafkaListenerContainerFactory")

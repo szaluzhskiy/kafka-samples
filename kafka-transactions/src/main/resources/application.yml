@@ -46,3 +46,8 @@ app:
     tx:
       data:
         topic: data.tx.topic
+
+logging:
+  level:
+    ROOT: INFO
+    org.springframework.kafka: DEBUG

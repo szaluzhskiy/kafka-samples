@@ -22,7 +22,7 @@
   </parent>
 
   <properties>
-
+    <aws-java-sdk.version>1.11.732</aws-java-sdk.version>
   </properties>
 
   <dependencyManagement>
@@ -33,6 +33,16 @@
         <version>Greenwich.RELEASE</version>
         <type>pom</type>
         <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.amazonaws</groupId>
+        <artifactId>aws-java-sdk-core</artifactId>
+        <version>${aws-java-sdk.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.amazonaws</groupId>
+        <artifactId>aws-java-sdk-s3</artifactId>
+        <version>${aws-java-sdk.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

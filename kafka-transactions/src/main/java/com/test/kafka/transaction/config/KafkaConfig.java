@@ -11,12 +11,14 @@ import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
-import org.springframework.kafka.listener.SeekToCurrentErrorHandler;
+import org.springframework.kafka.listener.AfterRollbackProcessor;
+import org.springframework.kafka.listener.DefaultAfterRollbackProcessor;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.kafka.transaction.ChainedKafkaTransactionManager;
 import org.springframework.kafka.transaction.KafkaTransactionManager;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.support.AbstractPlatformTransactionManager;
 import org.springframework.util.concurrent.ListenableFuture;
 
 @Slf4j
@@ -35,6 +37,8 @@ public class KafkaConfig {
   public ChainedKafkaTransactionManager<Object, Object> chainedKafkaTransactionManager(
       KafkaTransactionManager<?, ?> kafkaTransactionManager,
       JpaTransactionManager transactionManager) {
+    kafkaTransactionManager
+        .setTransactionSynchronization(AbstractPlatformTransactionManager.SYNCHRONIZATION_ON_ACTUAL_TRANSACTION);
     return new ChainedKafkaTransactionManager<>(kafkaTransactionManager, transactionManager);
   }
 
@@ -44,26 +48,34 @@ public class KafkaConfig {
       ConsumerFactory<Object, Object> consumerFactory,
       ProducerFactory<Object, Object> producerFactory,
       ChainedKafkaTransactionManager<Object, Object> chainedKafkaTransactionManager,
-      KafkaTemplate<Object, Object> kafkaTemplate) {
+      KafkaTemplate<Object, Object> kafkaTemplate,
+      AfterRollbackProcessor<Object, Object> afterRollbackProcessor
+  ) {
     ConcurrentKafkaListenerContainerFactory<Object, Object> factory =
         new ConcurrentKafkaListenerContainerFactory<>();
     configurer.configure(factory, consumerFactory);
     factory.getContainerProperties().setTransactionManager(chainedKafkaTransactionManager);
-
-    final SeekToCurrentErrorHandler errorHandler = new SeekToCurrentErrorHandler(
-        (consumerRecord, e) -> log.error("Can't consume record {} because of error {}", consumerRecord, e, e),
-        3
-    );
-    factory.setErrorHandler(errorHandler);
-    factory.setStatefulRetry(true);
 //    factory.setReplyTemplate(kafkaTemplate);
-    factory.setReplyTemplate(new KafkaTemplate<Object, Object>(producerFactory){
+    factory.setReplyTemplate(new KafkaTemplate<Object, Object>(producerFactory) {
       @Override
       protected ListenableFuture<SendResult> doSend(ProducerRecord producerRecord) {
         // emulate error in @SendTo
         throw new IllegalArgumentException("Custom send error");
       }
     });
+    factory.setAfterRollbackProcessor(afterRollbackProcessor);
     return factory;
+  }
+
+  @Bean
+  public AfterRollbackProcessor<Object, Object> afterRollbackProcessor(KafkaTemplate<Object, Object> kafkaTemplate) {
+    DefaultAfterRollbackProcessor<Object, Object> afterRollbackProcessor = new DefaultAfterRollbackProcessor<>(
+        (consumerRecord, e) ->
+            log.warn("[AfterRollback] After rollback processing of record: {} because of error: {}", consumerRecord, e),
+        2
+    );
+    afterRollbackProcessor.setProcessInTransaction(true);
+    afterRollbackProcessor.setKafkaTemplate(kafkaTemplate);
+    return afterRollbackProcessor;
   }
 }

@@ -5,7 +5,7 @@ import com.stas.learning.messaging.kafka.domain.DataKey;
 import com.stas.learning.messaging.kafka.services.ProduceService;
 import com.stas.learning.messaging.transaction.domain.TxDataChild;
 import com.stas.learning.messaging.transaction.domain.TxDataKey;
-import com.stas.learning.messaging.transaction.service.TxProducerService;
+import com.stas.learning.messaging.transaction.service.TxKafkaProducerService;
 import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,7 +21,7 @@ public class ProducerController {
   private ProduceService producer;
 
   @Autowired(required = false) // just for work with profiles
-  private TxProducerService txProducerService;
+  private TxKafkaProducerService txProducerService;
 
   @PostMapping
   public void generateTenMessages() {
@@ -31,15 +31,11 @@ public class ProducerController {
   }
 
   @PostMapping(path = "tx")
-  public void sendTxEvent(@RequestParam(required = false) String isError) {
+  public void sendTxEvent(@RequestParam(required = false) String key, @RequestParam(required = false) String value) {
     if (Objects.nonNull(txProducerService)) {
-      TxDataKey txDataKey = new TxDataKey("999", "service key");
-      TxDataChild txDataChild = new TxDataChild("parent value from service", "child value from service");
-      if (Boolean.parseBoolean(isError)) {
-        txProducerService.sendInTransactionWithError(txDataKey, txDataChild);
-      } else {
-        txProducerService.sendInTransaction(txDataKey, txDataChild);
-      }
+      TxDataKey txDataKey = new TxDataKey(key, "service key");
+      TxDataChild txDataChild = new TxDataChild("parent value from service", value);
+      txProducerService.send(txDataKey, txDataChild);
     }
   }
 }

@@ -33,6 +33,12 @@ app:
     oneres:
       topic: topic.1.res
     tx.data.topic: data.tx.topic
+  file:
+    storage:
+      endpoint: test.hcp-demo.hcpdemo.com
+      namespace: hitachi-emulator
+      secretKey: b144ef4a51d09eb8878c77bdc4ee8e6e
+      accessKey: dGVuYW50LXRlc3Q=
 
 logging.level:
   ROOT: INFO
