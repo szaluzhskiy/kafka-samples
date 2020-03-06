@@ -31,7 +31,9 @@ public class ProducerController {
   }
 
   @PostMapping(path = "tx")
-  public void sendTxEvent(@RequestParam(required = false) String key, @RequestParam(required = false) String value) {
+  public void sendTxEvent(
+      @RequestParam(required = false, defaultValue = "999") String key,
+      @RequestParam(required = false, defaultValue = "child value") String value) {
     if (Objects.nonNull(txProducerService)) {
       TxDataKey txDataKey = new TxDataKey(key, "service key");
       TxDataChild txDataChild = new TxDataChild("parent value from service", value);
