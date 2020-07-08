@@ -9,7 +9,6 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.Message;
-import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
@@ -20,8 +19,8 @@ import java.util.UUID;
 @Slf4j
 public class KafkaLocalConsumer {
 
-  @KafkaListener(topics = "${app.kafka.oneres.topic}", groupId = "localConsumer")
-  public void listen(@Payload String data, @Header(KafkaHeaders.CORRELATION_ID) String correlationId) {
-    log.info("Local->consume. data = {}, correlationID = {}", data, correlationId);
+  @KafkaListener(topics = "${app.kafka.oneres.topic}")
+  public void listen(@Payload String data) {
+    log.info("Remote server send responce data = {}", data);
   }
 }

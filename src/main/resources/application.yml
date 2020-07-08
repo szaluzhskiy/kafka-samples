@@ -1,12 +1,15 @@
 server:
   port: 8080
 
+server:
+  port: 8088
+
 spring:
   ## Kafka
   kafka:
     bootstrap-servers: 127.0.0.1:9093
     consumer:
-      auto-offset-reset: latest
+      auto-offset-reset: earliest
       enable-auto-commit: true
       group-id: localConsumer, remoteConsumer
       key-deserializer: com.stas.learning.messaging.kafka.serializers.DataKeyDeserializer
@@ -25,6 +28,12 @@ app:
       topic: input.topic.1
     output:
       topic: output.topic.1
+    data:
+      topic: transport.topic
+    onereq:
+      topic: topic.1.req
+    oneres:
+      topic: topic.1.res
     data:
       topic: transport.topic
     onereq:

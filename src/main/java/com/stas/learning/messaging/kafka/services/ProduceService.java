@@ -24,7 +24,7 @@ public class ProduceService {
   public void generate(DataKey key, DataChild value) {
     try {
       ListenableFuture<SendResult<DataKey, DataChild>> future =
-          kafkaTemplate.send(topic, key, value);
+          kafkaTemplate.send(topic, 0, key, value);
 
       SendResult<DataKey, DataChild> sendResult = future.get();
       log.info("send result: {}", sendResult);
